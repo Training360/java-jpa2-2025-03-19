@@ -1,27 +1,27 @@
 package employees;
 
-import io.swagger.v3.oas.annotations.Operation;
+import employees.api.ApiApi;
+import employees.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/employees")
-public class EmployeeController {
+public class EmployeeController implements ApiApi {
 
     private final EmployeeService employeeService;
 
-    @GetMapping
-    @Operation(summary = "list employees")
-    public List<EmployeeDto> findAll() {
-        return employeeService.findAll();
+    @Override
+    public ResponseEntity<List<EmployeeDto>> findAll() {
+        return ResponseEntity.ok(employeeService.findAll());
     }
 
-    @PostMapping
-    @Operation(summary = "save an employee")
-    public EmployeeDto save(@RequestBody EmployeeDto employee) {
-        return employeeService.save(employee);
+    @Override
+    public ResponseEntity<EmployeeDto> save(EmployeeDto employeeDto) {
+        return ApiApi.super.save(employeeDto);
     }
 }

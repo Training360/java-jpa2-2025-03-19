@@ -1,5 +1,6 @@
 package employees;
 
+import employees.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,22 @@ public class EmployeeService {
         return employeeRepository.findAll()
                 .stream()
                 // MapStruct can be used here
-                .map(e -> new EmployeeDto(e.getId(), e.getName(), e.getPersonalNumber()))
+                .map(this::toDto)
                 .toList();
     }
 
     public EmployeeDto save(EmployeeDto employee) {
         // MapStruct can be used here
-        var entity = new Employee(employee.name(), employee.personalNumber());
+        var entity = new Employee(employee.getName(), employee.getPersonalNumber());
         employeeRepository.save(entity);
-        return new EmployeeDto(entity.getId(), entity.getName(), entity.getPersonalNumber());
+        return toDto(entity);
+    }
+
+    private EmployeeDto toDto(Employee employee) {
+        var dto = new EmployeeDto();
+        dto.setId(employee.getId());
+        dto.setName(employee.getName());
+        dto.setPersonalNumber(employee.getPersonalNumber());
+        return dto;
     }
 }
