@@ -48,8 +48,9 @@ openApiGenerate {
     apiPackage = "employees.api"
     modelPackage = "employees.model"
     configOptions = [
-            useSpringBoot3: "true",
-            validateSpec: "false",
+            interfaceOnly: "true",
+            useTags: "true",
+            useSpringBoot3: "true"
     ]
 }
 

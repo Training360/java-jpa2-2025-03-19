@@ -22,7 +22,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -54,29 +54,9 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EmployeeDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/hello": {
-      "get": {
-        "tags": [
-          "hello-controller"
-        ],
-        "operationId": "sayHello",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "string"
                 }
               }
             }

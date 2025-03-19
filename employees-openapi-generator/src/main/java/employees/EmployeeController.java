@@ -1,17 +1,16 @@
 package employees;
 
-import employees.api.ApiApi;
+import employees.api.EmployeeControllerApi;
 import employees.model.EmployeeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class EmployeeController implements ApiApi {
+public class EmployeeController implements EmployeeControllerApi {
 
     private final EmployeeService employeeService;
 
@@ -22,6 +21,6 @@ public class EmployeeController implements ApiApi {
 
     @Override
     public ResponseEntity<EmployeeDto> save(EmployeeDto employeeDto) {
-        return ApiApi.super.save(employeeDto);
+        return ResponseEntity.ok(employeeService.save(employeeDto));
     }
 }
