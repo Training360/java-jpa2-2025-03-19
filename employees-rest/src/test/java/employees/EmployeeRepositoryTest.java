@@ -17,7 +17,7 @@ class EmployeeRepositoryTest {
     EmployeeRepository employeeRepository;
 
     @Test
-    void testSave() {
+    void save() {
         employeeRepository.save(new Employee("John Doe", "12345"));
 
         var employees = employeeRepository.findAll();
@@ -25,5 +25,17 @@ class EmployeeRepositoryTest {
         assertThat(employees)
                 .extracting(Employee::getName)
                 .containsExactly("John Doe");
+    }
+
+    @Test
+    void findAllDto() {
+        employeeRepository.save(new Employee("John Doe", "12345"));
+        employeeRepository.save(new Employee("Jane Doe", "123456"));
+
+        var employees = employeeRepository.findAllDto();
+
+        assertThat(employees)
+                .extracting(EmployeeDto::name)
+                .containsExactly("John Doe", "Jane Doe");
     }
 }

@@ -12,11 +12,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public List<EmployeeDto> findAll() {
-        return employeeRepository.findAll()
-                .stream()
-                // MapStruct can be used here
-                .map(e -> new EmployeeDto(e.getId(), e.getName(), e.getPersonalNumber()))
-                .toList();
+        return employeeRepository.findAllDto();
     }
 
     public EmployeeDto save(EmployeeDto employee) {
