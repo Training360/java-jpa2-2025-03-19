@@ -1,5 +1,9 @@
 package employees;
 
+import jakarta.persistence.EntityManagerFactory;
+import net.ttddyy.dsproxy.QueryCountHolder;
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +31,12 @@ class EmployeeRepositoryTest {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
+    @Autowired
+    TransactionTemplate transactionTemplate;
+
+    @Autowired
+    EntityManagerFactory entityManagerFactory;
 
     @Test
     void save() {
@@ -126,5 +137,41 @@ class EmployeeRepositoryTest {
 
         assertThat(employeesWithCities.getFirst().name()).startsWith("John Doe");
         assertThat(employeesWithCities.getLast().cities()).containsExactlyInAnyOrder("Budapest", "Pécs");
+    }
+
+    @Test
+    void numberOfQueries() {
+        IntStream.range(0, 10)
+                .forEach(i -> {
+                    Employee employee = new Employee("John Doe" + i, "12345" + i);
+                    employee.addAddress(new Address("Budapest", "Váci utca 1."));
+                    employeeRepository.save(employee);
+                });
+
+        QueryCountHolder.clear();
+
+        Statistics statistics = entityManagerFactory.unwrap(SessionFactory.class).getStatistics();
+        statistics.clear();
+
+        transactionTemplate.executeWithoutResult(status -> {
+            // Start the transaction and open persistence context
+
+//            List<Employee> employees = employeeRepository.findAll();
+            List<Employee> employees = employeeRepository.findAllEntitiesWithAddresses();
+            for (Employee employee : employees) {
+                System.out.println(employee.getName());
+                for (Address address : employee.getAddresses()) {
+                    System.out.println("Get addresses for employee");
+                    System.out.println(address.getCity());
+                }
+            }
+
+            // End persistence context and commit the transaction
+        });
+
+//        assertEquals(1, QueryCountHolder.get("dataSource").getSelect());
+
+        assertEquals(0, statistics.getCollectionFetchCount());
+
     }
 }

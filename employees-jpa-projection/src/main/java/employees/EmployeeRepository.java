@@ -8,6 +8,9 @@ import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
+    @Query("select distinct e from Employee e join fetch e.addresses")
+    List<Employee> findAllEntitiesWithAddresses();
+
 //    @Query("select new employees.EmployeeDto(e.id, e.name, e.personalNumber) from Employee e")
     List<EmployeeDto> findAllBy();
 
