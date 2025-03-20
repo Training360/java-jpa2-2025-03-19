@@ -1,0 +1,11 @@
+### List employees
+GET http://localhost:8080/api/employees
+
+### Create employee
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "personalNumber": "{{$uuid}}"
+}
