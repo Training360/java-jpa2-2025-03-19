@@ -24,4 +24,9 @@ public class Address {
     public Address(String city) {
         this.city = city;
     }
+
+    public Address(String city, Employee employee) {
+        this.city = city;
+        this.employee = employee;
+    }
 }

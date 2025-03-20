@@ -24,4 +24,9 @@ public class Phone {
     public Phone(String number) {
         this.number = number;
     }
+
+    public Phone(String number, Employee employee) {
+        this.number = number;
+        this.employee = employee;
+    }
 }

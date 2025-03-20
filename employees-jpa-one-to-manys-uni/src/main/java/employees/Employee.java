@@ -30,22 +30,6 @@ public class Employee {
     @NaturalId
     private String personalNumber;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> addresses = new ArrayList<>();
-
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Phone> phones = new ArrayList<>();
-
-    public void addAddress(Address address) {
-        addresses.add(address);
-        address.setEmployee(this);
-    }
-
-    public void addPhone(Phone phone) {
-        phones.add(phone);
-        phone.setEmployee(this);
-    }
-
     public Employee(String name, String personalNumber) {
         this.name = name;
         this.personalNumber = personalNumber;

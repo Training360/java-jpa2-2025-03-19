@@ -22,40 +22,25 @@ class EmployeeRepositoryTest {
     EmployeeRepository employeeRepository;
 
     @Autowired
+    PhoneRepository phoneRepository;
+
+    @Autowired
+    AddressRepository addressRepository;
+
+    @Autowired
     TransactionTemplate transactionTemplate;
 
     @BeforeEach
     void createTestData() {
         for (int i = 0; i < 20; i++) {
             var employee = new Employee("John Doe " + i, "12345" + i);
-            employee.addPhone(new Phone("11111"));
-            employee.addPhone(new Phone("22222"));
-            employee.addAddress(new Address("Budapest"));
-            employee.addAddress(new Address("Pécs"));
             employeeRepository.save(employee);
+            phoneRepository.save(new Phone("11111", employee));
+            phoneRepository.save(new Phone("22222", employee));
+            addressRepository.save(new Address("Budapest", employee));
+            addressRepository.save(new Address("Pécs", employee));
+
         }
-    }
-
-    @Test
-//    @Transactional
-//    @RepeatedTest(5)
-    void findAll() {
-
-        transactionTemplate.executeWithoutResult(status -> {
-            // Open context
-            long start = System.currentTimeMillis();
-            var employees = employeeRepository.findAll();
-            var dtos = new ArrayList<EmployeeDto>();
-            for (var employee : employees) {
-                var dto = new EmployeeDto(employee.getId(), employee.getName(), employee.getPersonalNumber(),
-                        employee.getAddresses().stream().map(a -> new AddressDto(employee.getId(), a.getCity())).toList(),
-                        employee.getPhones().stream().map(a -> new PhoneDto(employee.getId(), a.getNumber())).toList());
-                dtos.add(dto);
-            }
-            // Close context
-            long end = System.currentTimeMillis();
-            System.out.println("Sok SQL-lel: " + (end - start));
-        });
     }
 
 
