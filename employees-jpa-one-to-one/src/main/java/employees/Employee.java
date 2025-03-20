@@ -28,9 +28,33 @@ public class Employee {
     @NaturalId
     private String personalNumber;
 
+    @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private ParkingPlace parkingPlace;
+
+    @Basic(fetch = FetchType.LAZY)
+    private String cv;
+
+    public void setParkingPlace(ParkingPlace parkingPlace) {
+        this.parkingPlace = parkingPlace;
+        parkingPlace.setEmployee(this);
+    }
+
+    public void removeParkingPlace() {
+        if (parkingPlace != null) {
+            parkingPlace.setEmployee(null);
+            this.parkingPlace = null;
+        }
+    }
+
     public Employee(String name, String personalNumber) {
         this.name = name;
         this.personalNumber = personalNumber;
+    }
+
+    public Employee(String name, String personalNumber, String cv) {
+        this.name = name;
+        this.personalNumber = personalNumber;
+        this.cv = cv;
     }
 
     @Override
