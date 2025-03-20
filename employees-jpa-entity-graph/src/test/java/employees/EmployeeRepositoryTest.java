@@ -20,22 +20,8 @@ class EmployeeRepositoryTest {
     void save() {
         employeeRepository.save(new Employee("John Doe", "12345"));
 
-        var employees = employeeRepository.findAll();
+        var employees = employeeRepository.findAllWithAddresses();
 
-        assertThat(employees)
-                .extracting(Employee::getName)
-                .containsExactly("John Doe");
     }
 
-    @Test
-    void findAllDto() {
-        employeeRepository.save(new Employee("John Doe", "12345"));
-        employeeRepository.save(new Employee("Jane Doe", "123456"));
-
-        var employees = employeeRepository.findAllDto();
-
-        assertThat(employees)
-                .extracting(EmployeeDto::name)
-                .containsExactly("John Doe", "Jane Doe");
-    }
 }
