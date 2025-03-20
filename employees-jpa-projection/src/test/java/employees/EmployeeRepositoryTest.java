@@ -8,7 +8,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -88,12 +92,37 @@ class EmployeeRepositoryTest {
                 });
 
 
-        List<Employee> employees = employeeRepository.findAllWithAddresses();
-        List<EmployeeCitiesDto> employeesWithCities = employees.stream()
-                .map(e -> new EmployeeCitiesDto(e.getId(),
-                        e.getName(),
-                        e.getAddresses().stream().map(Address::getCity).toList()))
-                .toList();
+        List<PlainEmployeeWithCityDto> employees = employeeRepository.findAllWithAddresses();
+        employees.forEach(System.out::println);
+
+//        Map<Long, EmployeeCitiesDto> employeesWithCities = new HashMap<>();
+//        for (PlainEmployeeWithCityDto employee : employees) {
+//            EmployeeCitiesDto found = employeesWithCities.get(employee.employeeId());
+//            if (found == null) {
+//                found = new EmployeeCitiesDto(employee.employeeId(), employee.employeeName(), new ArrayList<>());
+//                employeesWithCities.put(employee.employeeId(), found);
+//            }
+//            else {
+//                found.cities().add(employee.cityName());
+//            }
+//        }
+
+        List<EmployeeCitiesDto> employeesWithCities = new ArrayList<>(employees.stream()
+                .collect(Collectors.toMap(
+                        PlainEmployeeWithCityDto::employeeId,
+                        dto -> new EmployeeCitiesDto(dto.employeeId(), dto.employeeName(), new ArrayList<>(List.of(dto.cityName()))),
+                        (existing, replacement) -> {
+                            existing.cities().add(replacement.cities().get(0));
+                            return existing;
+                        }
+                )).values());
+
+
+//        List<EmployeeCitiesDto> employeesWithCities = employees.stream()
+//                .map(e -> new EmployeeCitiesDto(e.getId(),
+//                        e.getName(),
+//                        e.getAddresses().stream().map(Address::getCity).toList()))
+//                .toList();
 
         assertThat(employeesWithCities.getFirst().name()).startsWith("John Doe");
         assertThat(employeesWithCities.getLast().cities()).containsExactlyInAnyOrder("Budapest", "Pécs");

@@ -15,7 +15,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<EmployeeDto> findByPersonalNumber(String personalNumber);
 
-    @Query("select distinct e from Employee e join fetch e.addresses")
-    List<Employee> findAllWithAddresses();
+    @Query("select distinct new employees.PlainEmployeeWithCityDto(e.id, e.name, a.city) from Employee e join e.addresses a")
+    List<PlainEmployeeWithCityDto> findAllWithAddresses();
 
 }
