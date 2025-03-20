@@ -1,4 +1,4 @@
 package employees;
 
-public record PhoneDto(String number) {
+public record PhoneDto(Long employeeId, String number) {
 }

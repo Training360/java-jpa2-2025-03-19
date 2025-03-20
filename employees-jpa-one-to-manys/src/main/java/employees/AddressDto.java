@@ -1,4 +1,4 @@
 package employees;
 
-public record AddressDto(String city) {
+public record AddressDto(Long employeeId, String city) {
 }
