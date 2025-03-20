@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.List;
 
 // SOHA NE HASZNÁLJUK: @Data
 @Getter
@@ -27,6 +29,22 @@ public class Employee {
     // Natural key
     @NaturalId
     private String personalNumber;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Phone> phones = new ArrayList<>();
+
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setEmployee(this);
+    }
+
+    public void addPhone(Phone phone) {
+        phones.add(phone);
+        phone.setEmployee(this);
+    }
 
     public Employee(String name, String personalNumber) {
         this.name = name;
