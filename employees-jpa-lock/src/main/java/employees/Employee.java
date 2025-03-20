@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 // SOHA NE HASZNÁLJUK: @Data
@@ -28,9 +29,20 @@ public class Employee {
     @NaturalId
     private String personalNumber;
 
+    @Version
+    private long version;
+
+    private LocalDateTime modifiedAt;
+
     public Employee(String name, String personalNumber) {
         this.name = name;
         this.personalNumber = personalNumber;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void updateModifiedAt() {
+        modifiedAt = LocalDateTime.now();
     }
 
     @Override
