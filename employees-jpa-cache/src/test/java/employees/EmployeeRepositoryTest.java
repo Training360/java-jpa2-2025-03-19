@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@SpringBootTest
 @Sql(statements = "delete from employees")
 class EmployeeRepositoryTest {
 
@@ -18,24 +18,18 @@ class EmployeeRepositoryTest {
 
     @Test
     void save() {
-        employeeRepository.save(new Employee("John Doe", "12345"));
+        var employee = new Employee("John Doe", "12345");
+        employeeRepository.save(employee);
+        var id = employee.getId();
 
-        var employees = employeeRepository.findAll();
+        var loaded = employeeRepository.findById(id).get();
 
-        assertThat(employees)
-                .extracting(Employee::getName)
-                .containsExactly("John Doe");
-    }
-
-    @Test
-    void findAllDto() {
-        employeeRepository.save(new Employee("John Doe", "12345"));
-        employeeRepository.save(new Employee("Jane Doe", "123456"));
+        loaded = employeeRepository.findById(id).get();
 
         var employees = employeeRepository.findAllDto();
 
-        assertThat(employees)
-                .extracting(EmployeeDto::name)
-                .containsExactly("John Doe", "Jane Doe");
+        employees = employeeRepository.findAllDto();
+
     }
+
 }

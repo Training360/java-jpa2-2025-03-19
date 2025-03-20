@@ -17,3 +17,9 @@ Docker indítása:
 ```shell
 docker run -d -p 8081:8080 -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/employees --name employees-app employees-app
 ```
+
+Redis indítása:
+
+```shell
+docker run -d -p 6379:6379 --name employees-redis redis
+```

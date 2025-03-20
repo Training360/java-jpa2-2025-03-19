@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "employees")
 @NoArgsConstructor
+@org.hibernate.annotations.Cache(region = "employeeCache", usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
